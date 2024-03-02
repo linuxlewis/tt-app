@@ -12,7 +12,6 @@ import { useContext } from "react";
 
 const useTicTacToe = ({ matchId }: { matchId: string }) => {
   const queryClient = useQueryClient();
-
   const sessionQuery = useSession();
 
   const { socket } = useContext(WebSocketContext);
@@ -144,6 +143,15 @@ const useTicTacToe = ({ matchId }: { matchId: string }) => {
     return false;
   }, [match, isPlayer1]);
 
+  const isDraw = useMemo<boolean>(() => {
+    if (match) {
+      if (match.board.flatMap((v) => v).every((s) => s !== null)) {
+        return winningPlayer === null;
+      }
+    }
+    return false;
+  }, [winningPlayer, match]);
+
   useEffect(() => {
     const onMatch = (match: Match) => {
       if (match.id.toString() === matchId) {
@@ -164,6 +172,7 @@ const useTicTacToe = ({ matchId }: { matchId: string }) => {
     isPlayerTurn,
     playerToken,
     winningPlayer,
+    isDraw,
   };
 };
 

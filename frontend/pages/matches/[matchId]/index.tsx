@@ -15,8 +15,14 @@ const MatchLayout = () => {
   const router = useRouter();
   const matchId = router.query.matchId as string;
 
-  const { match, isPlayerTurn, winningPlayer, playerToken, boardMutation } =
-    useTicTacToe({ matchId });
+  const {
+    match,
+    isPlayerTurn,
+    winningPlayer,
+    playerToken,
+    boardMutation,
+    isDraw,
+  } = useTicTacToe({ matchId });
 
   const onClick = useCallback(
     (rowIndex: number, columnIndex: number) => {
@@ -55,18 +61,19 @@ const MatchLayout = () => {
                 isDisabled={
                   boardMutation.isLoading ||
                   !isPlayerTurn ||
-                  winningPlayer !== null
+                  winningPlayer !== null ||
+                  isDraw
                 }
                 onClick={onClick}
               />
             )}
 
-            {isPlayerTurn && winningPlayer === null && (
+            {isPlayerTurn && winningPlayer === null && !isDraw && (
               <Typography sx={{ color: "red", ...textStyles }}>
                 Its your turn
               </Typography>
             )}
-            {!isPlayerTurn && winningPlayer === null && (
+            {!isPlayerTurn && winningPlayer === null && !isDraw && (
               <Typography sx={textStyles}>
                 Waiting for other players turn
               </Typography>
@@ -77,6 +84,10 @@ const MatchLayout = () => {
                 Game over Player {winningPlayer === match?.player1 ? "X" : "O"}{" "}
                 has won
               </Typography>
+            )}
+
+            {isDraw && (
+              <Typography sx={textStyles}>Game over. It is a draw.</Typography>
             )}
           </Grid>
         </Grid>
