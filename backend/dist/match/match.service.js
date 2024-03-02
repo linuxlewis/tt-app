@@ -29,6 +29,9 @@ let MatchService = class MatchService {
             .where("matches.completedAt is null")
             .andWhere("matches.player1 is not null")
             .andWhere("matches.player2 is null")
+            .andWhere("matches.player1 != :player", {
+            player: createMatchDto.player,
+        })
             .getOne();
         if (matchThatNeedsPlayer) {
             matchThatNeedsPlayer.player2 = createMatchDto.player;
